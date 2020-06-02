@@ -4,6 +4,7 @@ import com.ZBlog.bean.*;
 import com.ZBlog.commom.Result;
 import com.ZBlog.commom.ResultStatus;
 import com.ZBlog.dao.*;
+import com.ZBlog.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ZBlog.server.BlogServer;
@@ -30,6 +31,14 @@ public class BlogServerImpl implements BlogServer {
     BlogLikeDao blogLikeDao;
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    FileDao fileDao;
+    @Autowired
+    MailUtil mailUtil;
+    @Autowired
+    com.util.TokenUtil tokenUtil;
+    @Autowired
+    UserDao userDao;
 
     //获取博客列表
     @Override
@@ -63,7 +72,7 @@ public class BlogServerImpl implements BlogServer {
 
     //获取博客详情
     @Override
-    public Result getBlog(Map map,String userId) {
+    public Result getBlog(Map map,Integer userId) {
         Result result =new Result();
 
         TBlog tBlog=blogDao.getBlog(map);
@@ -75,15 +84,18 @@ public class BlogServerImpl implements BlogServer {
         tBlog.setTagsList(blogTagsDao.getTagsListByBlogId(tBlog.getBlogId()));
         //设置点赞数
         tBlog.setLikeNum(blogLikeDao.selectLikeByBlogId(tBlog.getBlogId()));
+        //非本人操作增加浏览量
+        if(userId != tBlog.getUserId()){
+            blogDao.addBrowse(tBlog.getBlogId());
+            tBlog.setBrowse(tBlog.getBrowse()+1);
+        }
         //删除敏感数据
         tBlog.setUserId(-1);
-        //增加浏览量
-        blogDao.addBrowse(tBlog.getBlogId());
-        tBlog.setBrowse(tBlog.getBrowse()+1);
+
 
         //检查该用户是否点赞
         if(userId!=null)
-            if (blogLikeDao.selectLike(tBlog.getBlogId(), Integer.valueOf(userId)) == 0) {
+            if (blogLikeDao.selectLike(tBlog.getBlogId(), userId) == 0) {
                 tBlog.setLike(false);
             } else {
                 tBlog.setLike(true);
@@ -162,6 +174,16 @@ public class BlogServerImpl implements BlogServer {
             //如果有标签
             if(!tBlog.getTagsList().isEmpty()){
                 if(blogTagsDao.insertByTagsIdListAndBlogId(tBlog.getTagsList(),tBlog.getBlogId())>=1){
+                    //添加到图片库
+                    if(tBlog.getImageList() != null)
+                        for (String s : tBlog.getImageList()) {
+                            TFile tFile = new TFile();
+                            tFile.setUserId(tBlog.getUserId());
+                            tFile.setDate(new Date());
+                            tFile.setFileMd5(s);
+                            tFile.setBlogId(tBlog.getBlogId());
+                            fileDao.insertFileName(tFile);
+                        }
                     result.setMessage("insertBlogAndTagsSuccess");
                     return result;
                 }
@@ -184,14 +206,22 @@ public class BlogServerImpl implements BlogServer {
 
     //按用户查博客列表
     @Override
-    public Result getBlogListByUserId(String userId) {
+    public Result getBlogListByUserId(Integer userId,Map<String,String> map) {
         Result result=new Result();
-        List<TBlog> blogList=blogDao.getBlogListByUserId(userId);
+        //分页
+        try{
+            PageHelper.startPage(Integer.parseInt(map.get("pageNum")),15);
+        }catch (Exception e){
+            System.out.println(e);
+            PageHelper.startPage(0,15);
+        }
+        List<TBlog> blogList=blogDao.getBlogListByUserId(map.get("title"),map.get("tag"),map.get("classId"),userId);
         if (blogList.isEmpty()){
             result.setResult(ResultStatus.NOTDATA);
             return result;
         }
-        result.setData(blogList);
+        PageInfo<TBlog> pageInfo =new PageInfo<TBlog>(blogList);
+        result.setData(pageInfo);
         return result;
     }
 
@@ -202,6 +232,18 @@ public class BlogServerImpl implements BlogServer {
         blogTagsDao.deleteByBlogId(tBlog.getBlogId());
         Result result=new Result();
         if(blogDao.updateBlog(tBlog)==1){
+            //当有新图片时，插入到库记录
+            if(tBlog.getImageList() != null)
+                for (String s : tBlog.getImageList()) {
+                    TFile tFile = new TFile();
+                    tFile.setUserId(tBlog.getUserId());
+                    tFile.setDate(new Date());
+                    tFile.setFileMd5(s);
+                    tFile.setUploadMd5(null);
+                    tFile.setBlogId(tBlog.getBlogId());
+                    System.out.println(tFile);
+                    fileDao.insertFileName(tFile);
+                }
             //如果有标签
             if(!tBlog.getTagsList().isEmpty()){
                 if(blogTagsDao.insertByTagsIdListAndBlogId(tBlog.getTagsList(),tBlog.getBlogId())>=1){
@@ -311,6 +353,29 @@ public class BlogServerImpl implements BlogServer {
                 }
             }
             result.setData(tComments);
+            return result;
+        }catch (Exception e){
+            result.setResult(ResultStatus.SERVERERR);
+            return result;
+        }
+    }
+
+    @Override
+    public Result getMailCode(String mailAddress) {
+        Result result = new Result();
+        try {
+            //生成随机码
+            Integer mailCode = (int)((Math.random() * 9 + 1) * 100000);
+            //加工成token
+            result.setMessage(tokenUtil.getMailToken(mailCode));
+            //发送邮件
+//            System.out.println("验证码："+mailCode);
+            if (userDao.checkEmail(mailAddress)==0){
+                mailUtil.sendSimpleMail(mailAddress,"ZBlog","你的验证码是："+mailCode+"，请在十分钟内使用");
+            }else {
+                result.setCode(302);
+                result.setMessage("hadUsed");
+            }
             return result;
         }catch (Exception e){
             result.setResult(ResultStatus.SERVERERR);

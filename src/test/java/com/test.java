@@ -1,7 +1,8 @@
 package com;
 
-import com.alibaba.fastjson.JSONObject;
+//import com.alibaba.fastjson.JSONObject;
 
+import com.ZBlog.util.MailUtil;
 import com.util.TokenUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -43,60 +45,46 @@ public class test {
         System.out.println(tokenUtil.getTokenData("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsYXN0TG9naW4iOjE1OTAzOTg3MzA2OTgsInJvbGUiOiJhZG1pbiIsInVzZXJOYW1lIjoiWmVyb1MiLCJ1c2VySWQiOjF9.xmvhYk646HxxdH_CR7ua_tfq0r8jTq_N85FHslbBsGc").get("role"));
     }
 
-//    public static void main(String args[]){
-//        System.out.println(
-//                "SELECT\n" +
-//                        "	a.commentId,\n" +
-//                        "	a.blogId,\n" +
-//                        "	a.date,\n" +
-//                        "	a.content,\n" +
-//                        "	a.rootId,\n" +
-//                        "	a.dialogId,\n" +
-//                        "	t_user.userName,\n" +
-//                        "	t_user.avatar,\n" +
-//                        "	b.toUserName,\n" +
-//                        "	c.likeNum\n" +
-//                        "FROM\n" +
-//                        "	t_comment a\n" +
-//                        "INNER JOIN\n" +
-//                        "		t_user\n" +
-//                        "	ON\n" +
-//                        "		a.userId=t_user.userId\n" +
-//                        "LEFT JOIN\n" +
-//                        "	(\n" +
-//                        "	SELECT\n" +
-//                        "		t_comment.commentId,\n" +
-//                        "		t_comment.rootId,\n" +
-//                        "		t_user.userName AS toUserName\n" +
-//                        "	FROM\n" +
-//                        "		t_comment\n" +
-//                        "	INNER JOIN\n" +
-//                        "		t_user\n" +
-//                        "	ON\n" +
-//                        "		t_comment.userId=t_user.userId\n" +
-//                        "	WHERE\n" +
-//                        "		dialogId=#{0}\n" +
-//                        "	) b\n" +
-//                        "ON\n" +
-//                        "	a.rootId=b.commentId\n" +
-//                        "LEFT JOIN\n" +
-//                        "	(\n" +
-//                        "		SELECT\n" +
-//                        "			t_commentLike.commentId,\n" +
-//                        "			count(*) AS likeNum\n" +
-//                        "		FROM\n" +
-//                        "			t_commentLike\n" +
-//                        "		GROUP BY\n" +
-//                        "			t_commentLike.commentId\n" +
-//                        "	)	c\n" +
-//                        "ON\n" +
-//                        "	a.commentId=c.commentId\n" +
-//                        "WHERE\n" +
-//                        "	a.dialogId =#{0}\n" +
-//                        "ORDER BY\n" +
-//                        "	a.date DESC"
-//        );
-//    }
+    @Test
+    public void testMail(){
+        MailUtil mailUtil = new MailUtil();
+        mailUtil.sendSimpleMail("LC1164326212@163.com","Hello!","word");
+    }
+
+    public static void main(String args[]){
+
+//        TokenUtil tokenUtil = new TokenUtil();
+//        String token = tokenUtil.getMailToken(123456);
+//        System.out.println(token);
+//        System.out.println(tokenUtil.getMailCode(token));
+        System.out.println(
+                "SELECT\n" +
+                        "	t_blog.blogId,\n" +
+                        "	t_blog.title,\n" +
+                        "	t_blog.blogDate,\n" +
+                        "	t_blog.browse\n" +
+                        "FROM\n" +
+                        "	t_blog\n" +
+                        "WHERE\n" +
+                        "	(t_blog.title LIKE #{title}\n" +
+                        "	OR\n" +
+                        "	t_blog.blogId\n" +
+                        "		IN\n" +
+                        "		(	SELECT \n" +
+                        "				t_blogtags.blogId\n" +
+                        "			FROM \n" +
+                        "				t_blogtags\n" +
+                        "			WHERE \n" +
+                        "				t_tags.tagName LIKE #{tagName})\n" +
+                        "		)\n" +
+                        "		AND\n" +
+                        "		cast(t_blog.classId AS char) Like #{classId}\n" +
+                        "	AND\n" +
+                        "	t_blog.userId=#{3}\n" +
+                        "ORDER BY \n" +
+                        "	t_blog.blogDate DESC"
+        );
+    }
 
 
 }

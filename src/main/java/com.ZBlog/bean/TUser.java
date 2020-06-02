@@ -17,6 +17,15 @@ public class TUser {
 
   //私有添加
   private Integer blogNum;
+  private String imgName;
+
+  public String getImgName() {
+    return imgName;
+  }
+
+  public void setImgName(String imgName) {
+    this.imgName = imgName;
+  }
 
   public Integer getBlogNum() {
     return blogNum;
@@ -137,7 +146,9 @@ public class TUser {
             ", phone=" + phone +
             ", gender='" + gender + '\'' +
             ", attribute='" + attribute + '\'' +
-            ", role=" + role +
+            ", role='" + role + '\'' +
+            ", blogNum=" + blogNum +
+            ", imgName='" + imgName + '\'' +
             '}';
   }
 }

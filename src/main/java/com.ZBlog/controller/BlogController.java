@@ -2,12 +2,9 @@ package com.ZBlog.controller;
 
 import com.ZBlog.commom.Result;
 import com.ZBlog.server.BlogServer;
+import com.ZBlog.util.MailUtil;
 import com.util.TokenUtil;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,13 +15,11 @@ public class BlogController extends ExceptionController {
 
     @Autowired
     BlogServer blogServer;
-
     @Autowired
     TokenUtil tokenUtil;
 
     @RequestMapping("/getBlogList")
     public Result getBlogList(@RequestBody Map<String,String> map){
-        map.put("userId","%");
         return blogServer.getBlogList(map);
     }
 
@@ -34,8 +29,8 @@ public class BlogController extends ExceptionController {
         if(map.get("token") ==null)
             userId=null;
         else
-            userId=tokenUtil.getTokenData(map.get("token")).get("userId");
-        return blogServer.getBlog(map,userId);
+            userId = tokenUtil.getTokenData(map.get("token")).get("userId");
+        return blogServer.getBlog(map,Integer.valueOf(userId));
     }
 
     @RequestMapping("/getHomeClass")
@@ -61,5 +56,10 @@ public class BlogController extends ExceptionController {
         else
             userId=tokenUtil.getTokenData(map.get("token")).get("userId");
         return blogServer.getCommentChild(Integer.valueOf(map.get("dialogId")),userId);
+    }
+
+    @RequestMapping("/getMailCode")
+    public Result getMailCode(@RequestBody Map<String,String> map){
+        return blogServer.getMailCode(map.get("email"));
     }
 }

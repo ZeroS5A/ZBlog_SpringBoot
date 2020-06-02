@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本机
+ Source Server         : 腾讯云
  Source Server Type    : MySQL
  Source Server Version : 80019
- Source Host           : 127.0.0.1:3306
+ Source Host           : localhost:3306
  Source Schema         : db_blog
 
  Target Server Type    : MySQL
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 29/05/2020 23:18:55
+ Date: 03/06/2020 00:22:57
 */
 
 SET NAMES utf8mb4;
@@ -51,15 +51,15 @@ CREATE TABLE `t_blog`  (
   PRIMARY KEY (`blogId`) USING BTREE,
   INDEX `b_userId`(`userId`) USING BTREE,
   INDEX `b_classification`(`classId`) USING BTREE,
-  CONSTRAINT `b_classification` FOREIGN KEY (`classId`) REFERENCES `t_classification` (`classId`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `b_classification` FOREIGN KEY (`classId`) REFERENCES `t_classification` (`classId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `b_userId` FOREIGN KEY (`userId`) REFERENCES `t_user` (`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 74 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for t_bloglike
+-- Table structure for t_blogLike
 -- ----------------------------
-DROP TABLE IF EXISTS `t_bloglike`;
-CREATE TABLE `t_bloglike`  (
+DROP TABLE IF EXISTS `t_blogLike`;
+CREATE TABLE `t_blogLike`  (
   `likeId` int(0) NOT NULL AUTO_INCREMENT,
   `userId` int(0) NOT NULL,
   `blogId` int(0) NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `t_bloglike`  (
   INDEX `bl_blogId`(`blogId`) USING BTREE,
   CONSTRAINT `bl_blogId` FOREIGN KEY (`blogId`) REFERENCES `t_blog` (`blogId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bl_userId` FOREIGN KEY (`userId`) REFERENCES `t_user` (`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_blogtags
@@ -84,7 +84,7 @@ CREATE TABLE `t_blogtags`  (
   INDEX `bg_tagsId`(`tagsId`) USING BTREE,
   CONSTRAINT `bg_blogId` FOREIGN KEY (`blogId`) REFERENCES `t_blog` (`blogId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bg_tagsId` FOREIGN KEY (`tagsId`) REFERENCES `t_tags` (`tagsId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 53 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 90 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_classification
@@ -96,7 +96,7 @@ CREATE TABLE `t_classification`  (
   `childName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`classId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_comment
@@ -120,13 +120,13 @@ CREATE TABLE `t_comment`  (
   CONSTRAINT `c_dialogId` FOREIGN KEY (`dialogId`) REFERENCES `t_comment` (`commentId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `c_rootId` FOREIGN KEY (`rootId`) REFERENCES `t_comment` (`commentId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `c_userId` FOREIGN KEY (`userId`) REFERENCES `t_user` (`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 112 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 114 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for t_commentlike
+-- Table structure for t_commentLike
 -- ----------------------------
-DROP TABLE IF EXISTS `t_commentlike`;
-CREATE TABLE `t_commentlike`  (
+DROP TABLE IF EXISTS `t_commentLike`;
+CREATE TABLE `t_commentLike`  (
   `likeId` int(0) NOT NULL AUTO_INCREMENT,
   `userId` int(0) NOT NULL,
   `date` datetime(0) NOT NULL,
@@ -142,7 +142,29 @@ CREATE TABLE `t_commentlike`  (
   CONSTRAINT `l_comment` FOREIGN KEY (`commentId`) REFERENCES `t_comment` (`commentId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `l_dialogId` FOREIGN KEY (`dialogId`) REFERENCES `t_comment` (`commentId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `l_userId` FOREIGN KEY (`userId`) REFERENCES `t_user` (`userId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 112 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 113 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_file
+-- ----------------------------
+DROP TABLE IF EXISTS `t_file`;
+CREATE TABLE `t_file`  (
+  `fileId` int(0) NOT NULL AUTO_INCREMENT,
+  `userId` int(0) NULL DEFAULT NULL,
+  `blogId` int(0) NULL DEFAULT NULL,
+  `date` datetime(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
+  `fileMd5` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `uploadMd5` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `isAvatar` tinyint(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`fileId`) USING BTREE,
+  INDEX `f_blogId`(`blogId`) USING BTREE,
+  INDEX `f_userId`(`userId`) USING BTREE,
+  INDEX `uploadMd5`(`uploadMd5`) USING BTREE,
+  INDEX `f_fileMd5`(`fileMd5`) USING BTREE,
+  CONSTRAINT `f_blogId` FOREIGN KEY (`blogId`) REFERENCES `t_blog` (`blogId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `f_fileMd5` FOREIGN KEY (`fileMd5`) REFERENCES `t_file` (`uploadMd5`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `f_userId` FOREIGN KEY (`userId`) REFERENCES `t_user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_relationship
@@ -172,8 +194,8 @@ CREATE TABLE `t_tags`  (
   PRIMARY KEY (`tagsId`, `tagName`, `createUser`) USING BTREE,
   INDEX `t_classification`(`classification`) USING BTREE,
   INDEX `tagsId`(`tagsId`) USING BTREE,
-  CONSTRAINT `t_classification` FOREIGN KEY (`classification`) REFERENCES `t_classification` (`classId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `t_classification` FOREIGN KEY (`classification`) REFERENCES `t_classification` (`classId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_user
@@ -192,6 +214,6 @@ CREATE TABLE `t_user`  (
   `attribute` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `role` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'user' COMMENT 'user用户，admin管理员，ban封禁',
   PRIMARY KEY (`userId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -9,7 +9,7 @@ import java.util.Map;
 public interface BlogServer {
     public Result getBlogList(Map map);
 
-    public Result getBlog(Map map,String userId);
+    public Result getBlog(Map map,Integer userId);
 
     public Result getHomeClass();
 
@@ -19,7 +19,7 @@ public interface BlogServer {
 
     public Result insertBlog(TBlog tBlog);
 
-    public Result getBlogListByUserId(String userId);
+    public Result getBlogListByUserId(Integer userId,Map<String,String> map);
 
     public Result updateBlog(TBlog tBlog);
 
@@ -28,4 +28,6 @@ public interface BlogServer {
     public Result getComment(Map<String,String> map,String userId);
 
     public Result getCommentChild(Integer dialogId,String userId);
+
+    public Result getMailCode(String mailAddress);
 }

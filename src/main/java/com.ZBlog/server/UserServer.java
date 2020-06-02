@@ -6,12 +6,18 @@ import com.ZBlog.bean.TTags;
 import com.ZBlog.bean.TUser;
 import com.ZBlog.commom.Result;
 
+import java.util.Map;
+
 public interface UserServer {
     public Result userLogin(String userName, String password);
 
     public Result getUserData(Integer userId);
 
     public Result updateUserData(TUser tUser,String userName);
+
+    public Result updatePassWd(Integer userId, Map<String,String> map);
+
+    public Result updateEmail(Integer userId, Map<String,String> map);
 
     public Result insertTags(TTags tTags);
 

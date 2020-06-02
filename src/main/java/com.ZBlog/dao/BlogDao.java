@@ -68,8 +68,6 @@ public interface BlogDao {
                     "				t_tags.tagName LIKE #{tagName})\n" +
                     "		)\n" +
                     "		AND\n" +
-                    "		cast(t_user.userId AS char) Like #{userId}\n" +
-                    "		AND\n" +
                     "		cast(t_blog.classId AS char) Like #{classId}\n" +
                     "	ORDER BY \n" +
                     "		t_blog.blogDate DESC"
@@ -93,7 +91,6 @@ public interface BlogDao {
     )
     public TBlog getBlog(Map map);
 
-
     @Insert(
             "INSERT INTO\n" +
                     "	t_blog(userId,classId,type,title,blogDate,blogContentHtml,blogContentMd,summary)\n" +
@@ -112,11 +109,25 @@ public interface BlogDao {
                     "FROM\n" +
                     "	t_blog\n" +
                     "WHERE\n" +
-                    "	t_blog.userId=#{0}"+
-                    "	ORDER BY \n" +
-                    "		t_blog.blogDate DESC"
+                    "	(t_blog.title LIKE #{0}\n" +
+                    "	OR\n" +
+                    "	t_blog.blogId\n" +
+                    "		IN\n" +
+                    "		(	SELECT \n" +
+                    "				t_blogtags.blogId\n" +
+                    "			FROM \n" +
+                    "				t_blogtags\n" +
+                    "			WHERE\n" +
+                    "				cast(t_blogtags.tagsId AS char) Like #{1}\n" +
+                    "	)	)\n" +
+                    "	AND\n" +
+                    "	cast(t_blog.classId AS char) Like #{2}\n" +
+                    "	AND\n" +
+                    "	t_blog.userId=#{3}\n" +
+                    "ORDER BY \n" +
+                    "	t_blog.blogDate DESC"
     )
-    public List<TBlog> getBlogListByUserId(String userId);
+    public List<TBlog> getBlogListByUserId(String title, String tag, String classId, Integer userId);
 
     @Update(
             "UPDATE\n" +

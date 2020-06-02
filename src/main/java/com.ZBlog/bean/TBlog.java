@@ -2,8 +2,6 @@ package com.ZBlog.bean;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.List;
 public class TBlog {
 
   private Integer blogId;
-  private long userId;
+  private Integer userId;
   private long classId;
   private String type;
   private String title;
@@ -27,6 +25,15 @@ public class TBlog {
   private List<TTags>  tagsList;
   private boolean isLike;
   private Integer likeNum;
+  private List<String> imageList;
+
+  public List<String> getImageList() {
+    return imageList;
+  }
+
+  public void setImageList(List<String> imageList) {
+    this.imageList = imageList;
+  }
 
   private Integer commentNum;
 
@@ -87,11 +94,11 @@ public class TBlog {
   }
 
 
-  public long getUserId() {
+  public Integer getUserId() {
     return userId;
   }
 
-  public void setUserId(long userId) {
+  public void setUserId(Integer userId) {
     this.userId = userId;
   }
 
@@ -183,6 +190,10 @@ public class TBlog {
             ", userName='" + userName + '\'' +
             ", avatar='" + avatar + '\'' +
             ", tagsList=" + tagsList +
+            ", isLike=" + isLike +
+            ", likeNum=" + likeNum +
+            ", filesList=" + imageList +
+            ", commentNum=" + commentNum +
             '}';
   }
 }

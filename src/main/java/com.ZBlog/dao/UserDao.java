@@ -13,8 +13,7 @@ public interface UserDao {
                     "t_user.userId,\n" +
                     "t_user.userName,\n" +
                     "t_user.avatar,\n" +
-                    "t_user.summary,\n" +
-                    "t_user.attribute,\n" +
+                    "t_user.email,\n" +
                     "t_user.role \n"+
                     "From \n" +
                     "t_user\n" +
@@ -64,6 +63,16 @@ public interface UserDao {
     )
     public int checkUserName(String userName);
 
+    @Select(
+            "SELECT\n" +
+                    "count(t_user.userName)\n" +
+                    "FROM\n" +
+                    "t_user\n" +
+                    "WHERE\n" +
+                    "t_user.email=#{0}"
+    )
+    public int checkEmail(String email);
+
     @Update(
             "UPDATE\n" +
                     "	t_user u\n" +
@@ -78,4 +87,24 @@ public interface UserDao {
                     "	u.userId=#{userId}"
     )
     public int updateUserData(TUser tUser);
+
+    @Update(
+            "UPDATE\n" +
+                    "	t_user u\n" +
+                    "	SET\n" +
+                    "	u.password=#{1}\n" +
+                    "	WHERE\n" +
+                    "	u.userId=#{0}"
+    )
+    public int updatePassWd(Integer userId,String passWd);
+
+    @Update(
+            "UPDATE\n" +
+                    "	t_user u\n" +
+                    "	SET\n" +
+                    "	u.email=#{1}\n" +
+                    "	WHERE\n" +
+                    "	u.userId=#{0}"
+    )
+    public int updateEmail(Integer userId,String email);
 }

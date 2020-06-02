@@ -50,18 +50,38 @@ public class UserController extends ExceptionController{
     }
 
     /**
+     * 更新密码
+     */
+    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
+    @RequestMapping("/updatePassWd")
+    public Result updatePassWd(@RequestHeader("Authorization") String token,@RequestBody Map<String,String> map){
+        Integer userId = Integer.valueOf(tokenUtil.getTokenData(token).get("userId"));
+        map.put("userName",tokenUtil.getTokenData(token).get("userName"));
+        return userServer.updatePassWd(userId,map);
+    }
+
+    /**
+     * 更新邮箱
+     */
+    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
+    @RequestMapping("/updateEmail")
+    public Result updateEmail(@RequestHeader("Authorization") String token,@RequestBody Map<String,String> map){
+        Integer userId = Integer.valueOf(tokenUtil.getTokenData(token).get("userId"));
+        return userServer.updateEmail(userId,map);
+    }
+
+    /**
      * 插入和更新博客
      **/
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/insertBlog")
     public Result insertBlog(@RequestHeader("Authorization") String token, @RequestBody TBlog tBlog){
-
+        tBlog.setUserId(Integer.parseInt(tokenUtil.getTokenData(token).get("userId")));
         //当博客Id不空，且用户名正确时
         if(tBlog.getBlogId()!=null &&  tokenUtil.getTokenData(token).get("userName").equals(tBlog.getUserName())){
             return blogServer.updateBlog(tBlog);
         }
         tBlog.setBlogDate(new Date());
-        tBlog.setUserId(Integer.parseInt(tokenUtil.getTokenData(token).get("userId")));
         return blogServer.insertBlog(tBlog);
     }
 
@@ -92,8 +112,8 @@ public class UserController extends ExceptionController{
 
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/getBlogListByUserId")
-    public Result getBlogListByUserId(@RequestHeader("Authorization") String token){
-        return blogServer.getBlogListByUserId(tokenUtil.getTokenData(token).get("userId"));
+    public Result getBlogListByUserId(@RequestHeader("Authorization") String token,@RequestBody Map<String,String> map){
+        return blogServer.getBlogListByUserId(Integer.valueOf(tokenUtil.getTokenData(token).get("userId")),map);
     }
 
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)

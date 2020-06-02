@@ -29,6 +29,10 @@ public class UserServerImpl implements UserServer {
     BlogTagsDao blogTagsDao;
     @Autowired
     CommentDao commentDao;
+    @Autowired
+    FileDao fileDao;
+    @Autowired
+    TokenUtil tokenUtil;
 
     //用户登录
     @Override
@@ -80,6 +84,15 @@ public class UserServerImpl implements UserServer {
     @Override
     public Result updateUserData(TUser tUser,String userName) {
         Result result = new Result();
+        //不为空说明更改了头像
+        if(tUser.getImgName()!=null){
+            TFile tFile = new TFile();
+            tFile.setFileMd5(tUser.getImgName());
+            tFile.setUserId(tUser.getUserId());
+            tFile.setDate(new Date());
+            tFile.setIsAvatar(1);
+            fileDao.insertFileName(tFile);
+        }
         //判断未改变userName
         if(tUser.getUserName().equals(userName)){
             userDao.updateUserData(tUser);
@@ -93,6 +106,46 @@ public class UserServerImpl implements UserServer {
             }
         }
         result.setMessage("Success");
+        return result;
+    }
+
+    @Override
+    public Result updatePassWd(Integer userId, Map<String,String> map) {
+        Result result = new Result();
+        //验证原密码
+        if(userDao.userLogin(map.get("userName"),map.get("rowpasswd")) != null){
+            //更新密码
+            if(userDao.updatePassWd(userId,map.get("passwd")) != 0){
+                result.setMessage("resetSuccess");
+                return result;
+            }
+            result.setResult(ResultStatus.SERVERERR);
+            return result;
+        }
+        result.setResult(ResultStatus.LOGINFAILED);
+        return result;
+    }
+
+    @Override
+    public Result updateEmail(Integer userId, Map<String, String> map) {
+        Result result = new Result();
+        if(tokenUtil.goodToken(map.get("token"))){
+            if (userDao.checkEmail(map.get("email"))==0){
+                if (map.get("code").equals(tokenUtil.getMailCode(map.get("token")))){
+                    userDao.updateEmail(userId,map.get("email"));
+                    result.setMessage("updateSuccess");
+                    return result;
+                }
+                result.setCode(302);
+                result.setMessage("fail");
+                return result;
+            }
+            result.setCode(301);
+            result.setMessage("had");
+            return result;
+        }
+        result.setCode(303);
+        result.setMessage("bad");
         return result;
     }
 
