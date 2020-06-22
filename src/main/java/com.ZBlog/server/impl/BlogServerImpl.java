@@ -85,7 +85,7 @@ public class BlogServerImpl implements BlogServer {
         //设置点赞数
         tBlog.setLikeNum(blogLikeDao.selectLikeByBlogId(tBlog.getBlogId()));
         //非本人操作增加浏览量
-        if(userId != tBlog.getUserId()){
+        if(userId != tBlog.getUserId() || userId == null){
             blogDao.addBrowse(tBlog.getBlogId());
             tBlog.setBrowse(tBlog.getBrowse()+1);
         }
@@ -171,19 +171,20 @@ public class BlogServerImpl implements BlogServer {
     public Result insertBlog(TBlog tBlog) {
         Result result=new Result();
         if(blogDao.insertBlog(tBlog)==1){
+            //添加到图片库
+            if(tBlog.getImageList() != null){
+                for (String s : tBlog.getImageList()) {
+                    TFile tFile = new TFile();
+                    tFile.setUserId(tBlog.getUserId());
+                    tFile.setDate(new Date());
+                    tFile.setFileMd5(s);
+                    tFile.setBlogId(tBlog.getBlogId());
+                    fileDao.insertFileName(tFile);
+                }
+            }
             //如果有标签
             if(!tBlog.getTagsList().isEmpty()){
                 if(blogTagsDao.insertByTagsIdListAndBlogId(tBlog.getTagsList(),tBlog.getBlogId())>=1){
-                    //添加到图片库
-                    if(tBlog.getImageList() != null)
-                        for (String s : tBlog.getImageList()) {
-                            TFile tFile = new TFile();
-                            tFile.setUserId(tBlog.getUserId());
-                            tFile.setDate(new Date());
-                            tFile.setFileMd5(s);
-                            tFile.setBlogId(tBlog.getBlogId());
-                            fileDao.insertFileName(tFile);
-                        }
                     result.setMessage("insertBlogAndTagsSuccess");
                     return result;
                 }
@@ -360,6 +361,7 @@ public class BlogServerImpl implements BlogServer {
         }
     }
 
+    //获取验证码
     @Override
     public Result getMailCode(String mailAddress) {
         Result result = new Result();

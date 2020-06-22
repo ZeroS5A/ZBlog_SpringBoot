@@ -11,6 +11,8 @@ import java.util.Map;
 public interface UserServer {
     public Result userLogin(String userName, String password);
 
+    public Result userRegister(Map<String, String> map);
+
     public Result getUserData(Integer userId);
 
     public Result updateUserData(TUser tUser,String userName);

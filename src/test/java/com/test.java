@@ -57,14 +57,53 @@ public class test {
 //        String token = tokenUtil.getMailToken(123456);
 //        System.out.println(token);
 //        System.out.println(tokenUtil.getMailCode(token));
+        Integer i = null;
+        Integer j = 1;
+        if (i != j)
+            System.out.println("yes");
+
         System.out.println(
-                "SELECT\n" +
+                "SELECT \n" +
                         "	t_blog.blogId,\n" +
-                        "	t_blog.title,\n" +
+                        "	t_blog.title ,\n" +
+                        "	t_blog.userId,\n" +
+                        "	t_blog.summary,\n" +
                         "	t_blog.blogDate,\n" +
-                        "	t_blog.browse\n" +
-                        "FROM\n" +
+                        "	t_blog.browse,\n" +
+                        "	t_user.avatar,\n" +
+                        "	t_user.userName,\n" +
+                        "	a.likeNum,\n" +
+                        "	b.commentNum\n" +
+                        "FROM \n" +
                         "	t_blog\n" +
+                        "INNER JOIN\n" +
+                        "	t_user\n" +
+                        "ON\n" +
+                        "	t_blog.userId=t_user.userId\n" +
+                        "LEFT JOIN\n" +
+                        "	(SELECT\n" +
+                        "		count(*) as likeNum,\n" +
+                        "		blogId\n" +
+                        "		FROM\n" +
+                        "		t_blogLike\n" +
+                        "		GROUP BY\n" +
+                        "		t_blogLike.blogId\n" +
+                        "		) a\n" +
+                        "ON\n" +
+                        "a.blogId=t_blog.blogId\n" +
+                        "LEFT JOIN\n" +
+                        "	(SELECT\n" +
+                        "		count(*) as commentNum,\n" +
+                        "		blogId\n" +
+                        "		FROM\n" +
+                        "		t_comment\n" +
+                        "		WHERE\n" +
+                        "			t_comment.dialogId is null\n" +
+                        "		GROUP BY\n" +
+                        "			t_comment.blogId\n" +
+                        "		) b\n" +
+                        "ON\n" +
+                        "b.blogId=t_blog.blogId\n" +
                         "WHERE\n" +
                         "	(t_blog.title LIKE #{title}\n" +
                         "	OR\n" +
@@ -74,15 +113,17 @@ public class test {
                         "				t_blogtags.blogId\n" +
                         "			FROM \n" +
                         "				t_blogtags\n" +
+                        "			INNER JOIN\n" +
+                        "				t_tags\n" +
+                        "			ON\n" +
+                        "				t_blogtags.tagsId=t_tags.tagsId\n" +
                         "			WHERE \n" +
                         "				t_tags.tagName LIKE #{tagName})\n" +
                         "		)\n" +
                         "		AND\n" +
                         "		cast(t_blog.classId AS char) Like #{classId}\n" +
-                        "	AND\n" +
-                        "	t_blog.userId=#{3}\n" +
-                        "ORDER BY \n" +
-                        "	t_blog.blogDate DESC"
+                        "	ORDER BY \n" +
+                        "		t_blog.blogDate DESC"
         );
     }
 

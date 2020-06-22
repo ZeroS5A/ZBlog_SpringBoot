@@ -1,9 +1,14 @@
 package com.ZBlog.dao;
 
 import com.ZBlog.bean.TUser;
+import org.apache.catalina.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Mapper
 public interface UserDao {
@@ -22,7 +27,17 @@ public interface UserDao {
                     "AND \n" +
                     "password=#{1}"
     )
+    //用户登录
     public TUser userLogin(String userName, String password);
+
+    @Insert(
+            "INSERT INTO\n" +
+                    "	t_user(userName,`password`,email)\n" +
+                    "VALUES\n" +
+                    "	(#{0},#{1},#{2})"
+    )
+    //用户注册
+    public Integer userRegister(String userName, String password, String email);
 
     @Select(
             "SELECT\n" +
@@ -51,6 +66,7 @@ public interface UserDao {
                     "	t_user.userId=b.userId\n" +
                     "WHERE t_user.userId=#{0}"
     )
+    //获取用户信息
     public TUser getUserData(Integer userId);
 
     @Select(
@@ -61,6 +77,7 @@ public interface UserDao {
                     "WHERE\n" +
                     "t_user.userName=#{0}"
     )
+    //检查昵称
     public int checkUserName(String userName);
 
     @Select(
@@ -71,6 +88,7 @@ public interface UserDao {
                     "WHERE\n" +
                     "t_user.email=#{0}"
     )
+    //检查邮箱
     public int checkEmail(String email);
 
     @Update(
@@ -86,6 +104,7 @@ public interface UserDao {
                     "	WHERE\n" +
                     "	u.userId=#{userId}"
     )
+    //更新用户信息
     public int updateUserData(TUser tUser);
 
     @Update(
@@ -96,6 +115,7 @@ public interface UserDao {
                     "	WHERE\n" +
                     "	u.userId=#{0}"
     )
+    //更新密码
     public int updatePassWd(Integer userId,String passWd);
 
     @Update(
@@ -106,5 +126,12 @@ public interface UserDao {
                     "	WHERE\n" +
                     "	u.userId=#{0}"
     )
+    //更新邮箱
     public int updateEmail(Integer userId,String email);
+
+    @Select(
+        ""
+    )
+    //获取所有用户数据
+    List<TUser> getUserList();
 }

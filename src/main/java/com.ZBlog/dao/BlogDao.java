@@ -17,6 +17,7 @@ public interface BlogDao {
                     "	t_blog.summary,\n" +
                     "	t_blog.blogDate,\n" +
                     "	t_blog.browse,\n" +
+                    "	t_blog.type,\n" +
                     "	t_user.avatar,\n" +
                     "	t_user.userName,\n" +
                     "	a.likeNum,\n" +
@@ -69,7 +70,10 @@ public interface BlogDao {
                     "		)\n" +
                     "		AND\n" +
                     "		cast(t_blog.classId AS char) Like #{classId}\n" +
-                    "	ORDER BY \n" +
+                    "	    AND\n" +
+                    "	        t_blog.type > 0\n" +
+                    "   ORDER BY\n" +
+                    "	    t_blog.type DESC,"+
                     "		t_blog.blogDate DESC"
     )
     public List<TBlog> getBlogList(Map map);

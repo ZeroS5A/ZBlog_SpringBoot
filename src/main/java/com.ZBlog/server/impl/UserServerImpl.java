@@ -71,6 +71,32 @@ public class UserServerImpl implements UserServer {
     }
 
     @Override
+    public Result userRegister(Map<String, String> map) {
+        Result result = new Result();
+        //验证验证码正确且未过期
+        if (tokenUtil.getMailCode(map.get("token")).equals(map.get("code")) && tokenUtil.goodToken(map.get("token"))){
+            //验证是否用户名已被注册
+            if (userDao.checkUserName(map.get("userName"))== 0){
+                if (userDao.userRegister(map.get("userName"),map.get("passwd"),map.get("email")) == 1){
+                    result.setMessage("注册成功请重新登录");
+                    return result;
+                }else {
+                    result.setResult(ResultStatus.SERVERERR);
+                    return result;
+                }
+            }else {
+                result.setCode(301);
+                result.setMessage("该用户名已被注册！");
+                return result;
+            }
+        }else {
+            result.setCode(302);
+            result.setMessage("验证码错误或者已经过期！");
+            return result;
+        }
+    }
+
+    @Override
     public Result getUserData(Integer userId) {
         Result result = new Result();
         try {

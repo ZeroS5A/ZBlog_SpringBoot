@@ -24,9 +24,19 @@ public class UserController extends ExceptionController{
     @Autowired
     TokenUtil tokenUtil;
 
+    /**
+     * 用户登录
+     * @param tUser
+     * @return
+     */
     @RequestMapping("/userLogin")
     public Result userLogin(@RequestBody TUser tUser){
         return userServer.userLogin(tUser.getUserName(),tUser.getPassword());
+    }
+
+    @RequestMapping("/userRegister")
+    public Result userRegister(@RequestBody Map<String, String> map){
+        return userServer.userRegister(map);
     }
 
     /**
@@ -86,7 +96,7 @@ public class UserController extends ExceptionController{
     }
 
     /**
-     * 插入标签
+     * 插入标签（暂时禁用）
      * @param token
      * @param tTags
      * @return
@@ -98,30 +108,48 @@ public class UserController extends ExceptionController{
         return userServer.insertTags(tTags);
     }
 
+
+    /**
+     * 获取标签列表
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/getTagsList")
     public Result getTagsList(@RequestHeader("Authorization") String token, @RequestBody TClassification tClassification){
         return userServer.getTagsList(tokenUtil.getTokenData(token).get("userId"),tClassification.getClassId());
     }
 
+
+    /**
+     * 获取分类
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/getClassificationList")
     public Result getClassification(){
         return userServer.getClassificationList();
     }
 
+
+    /**
+     * 根据用户Id获取博客
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/getBlogListByUserId")
     public Result getBlogListByUserId(@RequestHeader("Authorization") String token,@RequestBody Map<String,String> map){
         return blogServer.getBlogListByUserId(Integer.valueOf(tokenUtil.getTokenData(token).get("userId")),map);
     }
 
+    /**
+     * 删除博客
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/deleteBlog")
     public Result deleteBlog(@RequestHeader("Authorization") String token,@RequestBody Map<String,Integer> map){
         return blogServer.deleteBlog(map.get("blogId"),Integer.valueOf(tokenUtil.getTokenData(token).get("userId")));
     }
 
+    /**
+     * 点赞
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/addLike")
     public Result addLike(@RequestHeader("Authorization") String token, @RequestBody TLike tLike){
@@ -129,6 +157,10 @@ public class UserController extends ExceptionController{
         return blogServer.insertLike(tLike);
     }
 
+    /**
+     * 取消点赞
+     * @return
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/deleteLike")
     public Result deleteLike(@RequestHeader("Authorization") String token,@RequestBody TLike tLike){
@@ -136,6 +168,9 @@ public class UserController extends ExceptionController{
         return blogServer.deleteLike(tLike);
     }
 
+    /**
+     * 添加评论
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/addComment")
     public Result addComment(@RequestHeader("Authorization") String token,@RequestBody TComment tComment){
@@ -143,6 +178,9 @@ public class UserController extends ExceptionController{
         return userServer.addComment(tComment);
     }
 
+    /**
+     * 删除评论
+     */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/deleteComment")
     public Result deleteComment(@RequestHeader("Authorization") String token,@RequestBody TComment tComment){

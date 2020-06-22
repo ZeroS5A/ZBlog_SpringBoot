@@ -25,12 +25,12 @@ public class BlogController extends ExceptionController {
 
     @RequestMapping("/getBlog")
     public Result getBlog(@RequestBody Map<String,String> map){
-        String userId;
+        Integer userId;
         if(map.get("token") ==null)
             userId=null;
         else
-            userId = tokenUtil.getTokenData(map.get("token")).get("userId");
-        return blogServer.getBlog(map,Integer.valueOf(userId));
+            userId = Integer.valueOf(tokenUtil.getTokenData(map.get("token")).get("userId"));
+        return blogServer.getBlog(map,userId);
     }
 
     @RequestMapping("/getHomeClass")
@@ -58,6 +58,9 @@ public class BlogController extends ExceptionController {
         return blogServer.getCommentChild(Integer.valueOf(map.get("dialogId")),userId);
     }
 
+    /**
+     * 获取邮箱验证码
+     */
     @RequestMapping("/getMailCode")
     public Result getMailCode(@RequestBody Map<String,String> map){
         return blogServer.getMailCode(map.get("email"));
