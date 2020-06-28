@@ -1,21 +1,36 @@
 package com.ZBlog.controller;
 
 import com.ZBlog.commom.Result;
+import com.ZBlog.server.AdminServer;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/admin")
 public class AdminController extends ExceptionController{
 
-    @RequiresRoles(value={"admin"},logical = Logical.OR)
-    @PostMapping("/getUserList")
-    public Result getUserList(@RequestHeader("Authorization") String token){
+    @Autowired
+    AdminServer adminServer;
 
-        return null;
+    @RequiresRoles(value={"admin"})
+    @PostMapping("/getUserList")
+    public Result getUserList(){
+        return adminServer.getUserList();
     }
+
+    @RequiresRoles(value={"admin"})
+    @PostMapping("/banUser")
+    public Result banUserByUserId(@RequestBody String userId){
+        return adminServer.banUserByUserId(userId);
+    };
+
+    @RequiresRoles(value={"admin"})
+    @PostMapping("/changeRole")
+    public Result changeRoleByUserId(@RequestBody Map<String, String> map){
+        return adminServer.changeRoleByUserId(map.get("userId"),map.get("role"));
+    };
 }

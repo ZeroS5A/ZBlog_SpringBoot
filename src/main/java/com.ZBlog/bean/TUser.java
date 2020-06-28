@@ -14,6 +14,7 @@ public class TUser {
   private String gender;
   private String attribute;
   private String role;
+  private Integer isBan;
 
   //私有添加
   private Integer blogNum;
@@ -133,6 +134,14 @@ public class TUser {
     this.role = role;
   }
 
+  public Integer getIsBan() {
+    return isBan;
+  }
+
+  public void setIsBan(Integer isBan) {
+    this.isBan = isBan;
+  }
+
   @Override
   public String toString() {
     return "TUser{" +
@@ -147,6 +156,7 @@ public class TUser {
             ", gender='" + gender + '\'' +
             ", attribute='" + attribute + '\'' +
             ", role='" + role + '\'' +
+            ", isBan=" + isBan +
             ", blogNum=" + blogNum +
             ", imgName='" + imgName + '\'' +
             '}';

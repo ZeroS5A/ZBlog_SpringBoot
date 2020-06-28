@@ -19,7 +19,8 @@ public interface UserDao {
                     "t_user.userName,\n" +
                     "t_user.avatar,\n" +
                     "t_user.email,\n" +
-                    "t_user.role \n"+
+                    "t_user.role, \n"+
+                    "t_user.isBan \n"+
                     "From \n" +
                     "t_user\n" +
                     "Where \n" +
@@ -130,8 +131,32 @@ public interface UserDao {
     public int updateEmail(Integer userId,String email);
 
     @Select(
-        ""
+        "SELECT \n" +
+                "	userId,userName,email,phone,role\n" +
+                "FROM `t_user`"
     )
     //获取所有用户数据
-    List<TUser> getUserList();
+    public List<TUser> getUserList();
+
+    @Update(
+            "UPDATE\n" +
+                    "	t_user\n" +
+                    "SET\n" +
+                    "	t_user.isBan = IF(t_user.isBan=1,0,1)\n" +
+                    "WHERE\n" +
+                    "	t_user.userId = #{0}"
+    )
+    //更改用户的封禁状态
+    public int banUserByUserId(Integer userId);
+
+    @Update(
+            "UPDATE\n" +
+                    "	t_user\n" +
+                    "SET\n" +
+                    "	t_user.role = #{1}\n" +
+                    "WHERE\n" +
+                    "	t_user.userId = #{0}"
+    )
+    //更改用户的角色
+    public int changeRoleByUserId(Integer userId, String role);
 }

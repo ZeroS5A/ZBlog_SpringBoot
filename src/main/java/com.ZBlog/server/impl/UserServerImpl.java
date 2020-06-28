@@ -47,7 +47,7 @@ public class UserServerImpl implements UserServer {
             result.setResult(ResultStatus.LOGINFAILED);
             return result;
         //封禁账户
-        }else if(tUser.getRole().equals("ban")){
+        }else if(tUser.getIsBan().equals(1)){
             result.setResult(ResultStatus.ACCOUNTBAN);
             return result;
         //签发token及返回用户数据
