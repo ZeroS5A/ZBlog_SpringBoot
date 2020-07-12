@@ -5,7 +5,7 @@ import com.ZBlog.commom.Result;
 import com.ZBlog.commom.ResultStatus;
 import com.ZBlog.dao.*;
 import com.ZBlog.server.UserServer;
-import com.util.TokenUtil;
+import com.ZBlog.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

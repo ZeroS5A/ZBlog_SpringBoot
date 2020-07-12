@@ -36,7 +36,7 @@ public class BlogServerImpl implements BlogServer {
     @Autowired
     MailUtil mailUtil;
     @Autowired
-    com.util.TokenUtil tokenUtil;
+    TokenUtil tokenUtil;
     @Autowired
     UserDao userDao;
 

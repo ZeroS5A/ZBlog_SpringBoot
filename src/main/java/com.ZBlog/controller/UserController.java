@@ -4,7 +4,7 @@ import com.ZBlog.bean.*;
 import com.ZBlog.commom.Result;
 import com.ZBlog.server.BlogServer;
 import com.ZBlog.server.UserServer;
-import com.util.TokenUtil;
+import com.ZBlog.util.TokenUtil;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,16 @@ public class UserController extends ExceptionController{
 
     /**
      * 用户登录
-     * @param tUser
-     * @return
      */
     @RequestMapping("/userLogin")
     public Result userLogin(@RequestBody TUser tUser){
         return userServer.userLogin(tUser.getUserName(),tUser.getPassword());
     }
 
+    /**
+     * 用户注册
+     * userName,password,token,code,email
+     */
     @RequestMapping("/userRegister")
     public Result userRegister(@RequestBody Map<String, String> map){
         return userServer.userRegister(map);
@@ -159,7 +161,6 @@ public class UserController extends ExceptionController{
 
     /**
      * 取消点赞
-     * @return
      */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/deleteLike")

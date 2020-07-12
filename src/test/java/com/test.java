@@ -3,7 +3,7 @@ package com;
 //import com.alibaba.fastjson.JSONObject;
 
 import com.ZBlog.util.MailUtil;
-import com.util.TokenUtil;
+import com.ZBlog.util.TokenUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,14 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

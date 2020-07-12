@@ -1,4 +1,4 @@
-package com.util;
+package com.ZBlog.util;
 
 import com.ZBlog.bean.TUser;
 import com.auth0.jwt.JWT;

@@ -2,8 +2,7 @@ package com.ZBlog.controller;
 
 import com.ZBlog.commom.Result;
 import com.ZBlog.server.BlogServer;
-import com.ZBlog.util.MailUtil;
-import com.util.TokenUtil;
+import com.ZBlog.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

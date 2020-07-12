@@ -1,6 +1,6 @@
 package com.ZBlog.commom;
 
-import com.util.TokenUtil;
+import com.ZBlog.util.TokenUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

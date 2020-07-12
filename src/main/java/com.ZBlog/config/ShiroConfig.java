@@ -40,6 +40,9 @@ public class ShiroConfig {
         filterRuleMap.put("/blog/**", "shiro");
         filterRuleMap.put("/user/userLogin", "shiro");
         filterRuleMap.put("/user/userRegister", "shiro");
+        filterRuleMap.put("/socketTest/**", "shiro");
+        filterRuleMap.put("/socketConnect/**", "shiro");
+        filterRuleMap.put("/app/**", "shiro");
         filterRuleMap.put("/druid/**", "anon");
         filterRuleMap.put("/**", "jwt");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
