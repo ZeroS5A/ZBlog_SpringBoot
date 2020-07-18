@@ -66,6 +66,7 @@ public interface CommentDao {
                     "  t_comment.content,\n" +
                     "  t_comment.date,\n" +
                     "  t_user.userName,\n" +
+                    "  t_user.nickName,\n" +
                     "  t_user.avatar,\n" +
                     "	a.commentNum,\n" +
                     "	b.likeNum\n" +
@@ -124,6 +125,7 @@ public interface CommentDao {
                     "	a.rootId,\n" +
                     "	a.dialogId,\n" +
                     "	t_user.userName,\n" +
+                    "   t_user.nickName,\n" +
                     "	t_user.avatar,\n" +
                     "	b.toUserName,\n" +
                     "	c.likeNum\n" +

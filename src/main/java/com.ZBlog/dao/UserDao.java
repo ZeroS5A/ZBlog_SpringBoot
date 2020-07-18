@@ -17,6 +17,7 @@ public interface UserDao {
             "Select\n" +
                     "t_user.userId,\n" +
                     "t_user.userName,\n" +
+                    "t_user.nickName,\n" +
                     "t_user.avatar,\n" +
                     "t_user.email,\n" +
                     "t_user.role, \n"+
@@ -43,6 +44,7 @@ public interface UserDao {
     @Select(
             "SELECT\n" +
                     "t_user.userName,\n" +
+                    "t_user.nickName,\n" +
                     "t_user.occupation,\n" +
                     "t_user.avatar,\n" +
                     "t_user.summary,\n" +
@@ -78,7 +80,7 @@ public interface UserDao {
                     "WHERE\n" +
                     "t_user.userName=#{0}"
     )
-    //检查昵称
+    //检查用户名
     public int checkUserName(String userName);
 
     @Select(
@@ -96,7 +98,7 @@ public interface UserDao {
             "UPDATE\n" +
                     "	t_user u\n" +
                     "	SET\n" +
-                    "	u.userName=#{userName},\n" +
+                    "	u.nickName=#{nickName},\n" +
                     "	u.email=#{email},\n" +
                     "	u.avatar=#{avatar},\n" +
                     "	u.occupation=#{occupation},\n" +

@@ -6,6 +6,7 @@ public class TUser {
   private Integer userId;
   private String password;
   private String userName;
+  private String nickName;
   private String occupation;
   private String avatar;
   private String summary;
@@ -62,6 +63,13 @@ public class TUser {
     this.userName = userName;
   }
 
+  public String getNickName() {
+    return nickName;
+  }
+
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
+  }
 
   public String getOccupation() {
     return occupation;
@@ -148,6 +156,7 @@ public class TUser {
             "userId=" + userId +
             ", password='" + password + '\'' +
             ", userName='" + userName + '\'' +
+            ", nickName='" + nickName + '\'' +
             ", occupation='" + occupation + '\'' +
             ", avatar='" + avatar + '\'' +
             ", summary='" + summary + '\'' +
@@ -161,4 +170,5 @@ public class TUser {
             ", imgName='" + imgName + '\'' +
             '}';
   }
+
 }

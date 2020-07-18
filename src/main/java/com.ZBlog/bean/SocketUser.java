@@ -1,6 +1,5 @@
 package com.ZBlog.bean;
 
-
 import java.security.Principal;
 
 public class SocketUser implements Principal {

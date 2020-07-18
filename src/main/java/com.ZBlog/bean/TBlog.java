@@ -21,6 +21,7 @@ public class TBlog {
   private String summary;
   //私有添加
   private String userName;
+  private String nickName;
   private String avatar;
   private List<TTags>  tagsList;
   private boolean isLike;
@@ -75,6 +76,14 @@ public class TBlog {
 
   public void setUserName(String userName) {
     this.userName = userName;
+  }
+
+  public String getNickName() {
+    return nickName;
+  }
+
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
   }
 
   public String getAvatar() {
@@ -188,11 +197,12 @@ public class TBlog {
             ", browse=" + browse +
             ", summary='" + summary + '\'' +
             ", userName='" + userName + '\'' +
+            ", nickName='" + nickName + '\'' +
             ", avatar='" + avatar + '\'' +
             ", tagsList=" + tagsList +
             ", isLike=" + isLike +
             ", likeNum=" + likeNum +
-            ", filesList=" + imageList +
+            ", imageList=" + imageList +
             ", commentNum=" + commentNum +
             '}';
   }

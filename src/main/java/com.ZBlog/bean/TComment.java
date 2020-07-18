@@ -19,6 +19,7 @@ public class TComment {
 
   //私有添加
   private String userName;
+  private String nickName;
   private String avatar;
   private String toUserName;
   private String commentNum;
@@ -63,6 +64,14 @@ public class TComment {
 
   public void setUserName(String userName) {
     this.userName = userName;
+  }
+
+  public String getNickName() {
+    return nickName;
+  }
+
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
   }
 
   public String getAvatar() {

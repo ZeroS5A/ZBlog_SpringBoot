@@ -122,9 +122,11 @@ public class UserServerImpl implements UserServer {
         //判断未改变userName
         if(tUser.getUserName().equals(userName)){
             userDao.updateUserData(tUser);
+            result.setCode(200);
         }else{
             if(userDao.checkUserName(tUser.getUserName())==0){
                 userDao.updateUserData(tUser);
+                result.setCode(201);
             }else {
                 result.setCode(304);
                 result.setMessage("该用户名已被注册");

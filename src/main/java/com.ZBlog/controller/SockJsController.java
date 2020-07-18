@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.Map;
 
 @Controller
 public class SockJsController {
@@ -20,12 +21,14 @@ public class SockJsController {
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
     //响应前端发送请求地址"/hello"
-    @MessageMapping("/hello")
+    @MessageMapping("/sendPub")
     //sendTo是订阅地址
-    @SendTo("/topic/hello")
-    public Result helloEcho(SocketMessage message) throws Exception {
-        System.out.println(message.toString());
+    @SendTo("/topic/public")
+    public Result helloEcho(SocketMessage message, Principal fromUser, Map<String, Object> attributes) throws Exception {
         Result result = new Result();
+        System.out.println("att"+attributes.toString());
+        //设置发送者名
+        message.setFromUser(fromUser.getName());
         result.setData(message);
         return result;
     }
@@ -40,7 +43,9 @@ public class SockJsController {
     }
     @RequestMapping(path = "/socketTest/send", method = RequestMethod.GET)
     public Result sendTest(@RequestParam String user, @RequestParam String mess) {
-        simpMessageSendingOperations.convertAndSendToUser(user, "/alone/hi", mess);
+        SocketMessage socketMessage = new SocketMessage();
+        socketMessage.setMessage(mess);
+        simpMessageSendingOperations.convertAndSendToUser(user, "/alone/hi", socketMessage);
         return null;
     }
 }

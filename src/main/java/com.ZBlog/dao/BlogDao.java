@@ -13,13 +13,14 @@ public interface BlogDao {
             "SELECT \n" +
                     "	t_blog.blogId,\n" +
                     "	t_blog.title ,\n" +
-                    "	t_blog.userId,\n" +
+//                    "	t_blog.userId,\n" +
                     "	t_blog.summary,\n" +
                     "	t_blog.blogDate,\n" +
                     "	t_blog.browse,\n" +
                     "	t_blog.type,\n" +
                     "	t_user.avatar,\n" +
                     "	t_user.userName,\n" +
+                    "	t_user.nickName,\n" +
                     "	a.likeNum,\n" +
                     "	b.commentNum\n" +
                     "FROM \n" +
@@ -83,6 +84,7 @@ public interface BlogDao {
             "SELECT \n" +
                     "	t_blog.*,\n" +
                     "	t_user.avatar,\n" +
+                    "   t_user.nickName,\n" +
                     "	t_user.userName\n" +
                     "FROM \n" +
                     "	t_blog\n" +
