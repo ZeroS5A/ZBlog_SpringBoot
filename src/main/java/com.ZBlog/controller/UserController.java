@@ -99,9 +99,6 @@ public class UserController extends ExceptionController{
 
     /**
      * 插入标签（暂时禁用）
-     * @param token
-     * @param tTags
-     * @return
      */
     @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @RequestMapping("/insertTags")
@@ -187,5 +184,23 @@ public class UserController extends ExceptionController{
     public Result deleteComment(@RequestHeader("Authorization") String token,@RequestBody TComment tComment){
         tComment.setUserId(Integer.parseInt(tokenUtil.getTokenData(token).get("userId")));
         return userServer.deleteComment(tComment);
+    }
+
+    /**
+     * 关注设置
+     */
+    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
+    @RequestMapping("/changeAttention")
+    public Result changeAttention(@RequestHeader("Authorization") String token,@RequestBody Map<String, String> map){
+        return userServer.changeAttention(Integer.parseInt(tokenUtil.getTokenData(token).get("userId")),map);
+    }
+
+    /**
+     * 用户关系获取
+     */
+    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
+    @RequestMapping("/getUserRelationShip")
+    public Result getUserRelationShip(@RequestHeader("Authorization") String token){
+        return userServer.getUserRelationShip(Integer.parseInt(tokenUtil.getTokenData(token).get("userId")));
     }
 }

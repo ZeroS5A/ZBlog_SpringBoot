@@ -5,18 +5,18 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ZBlog.bean.TUser;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service("TokenUtil")
+@Component
 public class TokenUtil {
 
     //登录过期时间设置(300分钟)
     private static final long EXPIRE_TIME = 300*60*1000;
-    //验证码过期时间设置(1分钟)
+    //验证码过期时间设置(10分钟)
     private static final long MAILEXPIRE_TIME = 10*60*1000;
 
     //私钥设置(随便乱写的)

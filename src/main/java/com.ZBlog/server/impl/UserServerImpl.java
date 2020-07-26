@@ -33,6 +33,8 @@ public class UserServerImpl implements UserServer {
     FileDao fileDao;
     @Autowired
     TokenUtil tokenUtil;
+    @Autowired
+    RelationShipDao relationShipDao;
 
     //用户登录
     @Override
@@ -76,9 +78,9 @@ public class UserServerImpl implements UserServer {
         //验证验证码正确且未过期
         if (tokenUtil.getMailCode(map.get("token")).equals(map.get("code")) && tokenUtil.goodToken(map.get("token"))){
             //验证是否用户名已被注册
-            if (userDao.checkUserName(map.get("userName"))== 0){
+            if (userDao.checkUserName(map.get("userName"))== null){
                 if (userDao.userRegister(map.get("userName"),map.get("passwd"),map.get("email")) == 1){
-                    result.setMessage("注册成功请重新登录");
+                    result.setMessage("注册成功！");
                     return result;
                 }else {
                     result.setResult(ResultStatus.SERVERERR);
@@ -124,7 +126,7 @@ public class UserServerImpl implements UserServer {
             userDao.updateUserData(tUser);
             result.setCode(200);
         }else{
-            if(userDao.checkUserName(tUser.getUserName())==0){
+            if(userDao.checkUserName(tUser.getUserName())==null){
                 userDao.updateUserData(tUser);
                 result.setCode(201);
             }else {
@@ -272,6 +274,30 @@ public class UserServerImpl implements UserServer {
             result.setResult(ResultStatus.ILLEAGL);
         }
 
+        return result;
+    }
+
+    @Override
+    public Result changeAttention(Integer userId, Map map) {
+        Result result = new Result();
+        String user2 = userDao.checkUserName(map.get("userName").toString());
+        if (relationShipDao.checkRelationShip(userId, Integer.valueOf(user2), "attention") == 0) {
+            relationShipDao.insertRelationShip(userId, Integer.valueOf(user2), "attention");
+            result.setCode(201);
+            result.setMessage("关注成功");
+        }
+        else {
+            relationShipDao.deleteRelationShip(userId, Integer.valueOf(user2), "attention");
+            result.setCode(202);
+            result.setMessage("取关成功");
+        }
+        return result;
+    }
+
+    @Override
+    public Result getUserRelationShip(Integer userId) {
+        Result result = new Result();
+        result.setData(relationShipDao.getUserRelationShip(userId));
         return result;
     }
 

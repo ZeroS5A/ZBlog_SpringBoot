@@ -39,6 +39,8 @@ public class BlogServerImpl implements BlogServer {
     TokenUtil tokenUtil;
     @Autowired
     UserDao userDao;
+    @Autowired
+    RelationShipDao relationShipDao;
 
     //获取博客列表
     @Override
@@ -89,9 +91,6 @@ public class BlogServerImpl implements BlogServer {
             blogDao.addBrowse(tBlog.getBlogId());
             tBlog.setBrowse(tBlog.getBrowse()+1);
         }
-        //删除敏感数据
-        tBlog.setUserId(-1);
-
 
         //检查该用户是否点赞
         if(userId!=null)
@@ -100,6 +99,18 @@ public class BlogServerImpl implements BlogServer {
             } else {
                 tBlog.setLike(true);
             }
+
+        //检查是否关注
+        if(userId!=null)
+            if (relationShipDao.checkRelationShip(userId, tBlog.getUserId(), "attention") == 0) {
+                tBlog.setAttention(false);
+            }
+            else {
+                tBlog.setAttention(true);
+            }
+
+        //删除敏感数据
+        tBlog.setUserId(-1);
 
         result.setData(tBlog);
         return result;
@@ -373,7 +384,7 @@ public class BlogServerImpl implements BlogServer {
             //发送邮件
 //            System.out.println("验证码："+mailCode);
             if (userDao.checkEmail(mailAddress)==0){
-                mailUtil.sendSimpleMail(mailAddress,"ZBlog","你的验证码是："+mailCode+"，请在十分钟内使用");
+                mailUtil.sendSimpleMail(mailAddress,"ZBlog","欢迎注册！你的验证码是："+mailCode+"，请在十分钟内使用");
             }else {
                 result.setCode(302);
                 result.setMessage("hadUsed");

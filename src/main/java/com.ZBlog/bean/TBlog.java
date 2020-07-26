@@ -1,6 +1,5 @@
 package com.ZBlog.bean;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
@@ -22,9 +21,11 @@ public class TBlog {
   //私有添加
   private String userName;
   private String nickName;
+  private String userSummary;
   private String avatar;
   private List<TTags>  tagsList;
   private boolean isLike;
+  private boolean isAttention;
   private Integer likeNum;
   private List<String> imageList;
 
@@ -61,6 +62,15 @@ public class TBlog {
   public void setLike(boolean like) {
     isLike = like;
   }
+
+  public boolean isAttention() {
+    return isAttention;
+  }
+
+  public void setAttention(boolean attention) {
+    isAttention = attention;
+  }
+
 
   public List<TTags> getTagsList() {
     return tagsList;
@@ -174,6 +184,13 @@ public class TBlog {
     this.browse = browse;
   }
 
+  public String getUserSummary() {
+    return userSummary;
+  }
+
+  public void setUserSummary(String userSummary) {
+    this.userSummary = userSummary;
+  }
 
   public String getSummary() {
     return summary;
@@ -198,6 +215,7 @@ public class TBlog {
             ", summary='" + summary + '\'' +
             ", userName='" + userName + '\'' +
             ", nickName='" + nickName + '\'' +
+            ", userSummary='" + userSummary + '\'' +
             ", avatar='" + avatar + '\'' +
             ", tagsList=" + tagsList +
             ", isLike=" + isLike +

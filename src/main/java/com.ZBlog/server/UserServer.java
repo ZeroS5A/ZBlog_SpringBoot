@@ -5,6 +5,7 @@ import com.ZBlog.bean.TComment;
 import com.ZBlog.bean.TTags;
 import com.ZBlog.bean.TUser;
 import com.ZBlog.commom.Result;
+import org.apache.ibatis.annotations.Insert;
 
 import java.util.Map;
 
@@ -30,4 +31,8 @@ public interface UserServer {
     public Result addComment(TComment tComment);
 
     public Result deleteComment(TComment tComment);
+
+    public Result changeAttention(Integer userId, Map map);
+
+    public Result getUserRelationShip(Integer userId);
 }

@@ -85,6 +85,7 @@ public interface BlogDao {
                     "	t_blog.*,\n" +
                     "	t_user.avatar,\n" +
                     "   t_user.nickName,\n" +
+                    "   t_user.summary AS userSummary,\n" +
                     "	t_user.userName\n" +
                     "FROM \n" +
                     "	t_blog\n" +

@@ -34,9 +34,9 @@ public interface UserDao {
 
     @Insert(
             "INSERT INTO\n" +
-                    "	t_user(userName,`password`,email)\n" +
+                    "	t_user(userName, nickName, `password`,email)\n" +
                     "VALUES\n" +
-                    "	(#{0},#{1},#{2})"
+                    "	(#{0},#{0},#{1},#{2})"
     )
     //用户注册
     public Integer userRegister(String userName, String password, String email);
@@ -74,14 +74,14 @@ public interface UserDao {
 
     @Select(
             "SELECT\n" +
-                    "count(t_user.userName)\n" +
+                    "t_user.userId\n" +
                     "FROM\n" +
                     "t_user\n" +
                     "WHERE\n" +
                     "t_user.userName=#{0}"
     )
     //检查用户名
-    public int checkUserName(String userName);
+    public String checkUserName(String userName);
 
     @Select(
             "SELECT\n" +

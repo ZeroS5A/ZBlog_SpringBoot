@@ -2,12 +2,20 @@ package com.ZBlog.bean;
 
 public class SocketMessage {
     String message;
-    /** 发送的目的地 */
-    String destination;
 
-    String fromUser;
+    String fromUserName;
 
-    String toUser;
+    String fromUserAvatar;
+
+    String toUserName;
+
+    public String getFromUserAvatar() {
+        return fromUserAvatar;
+    }
+
+    public void setFromUserAvatar(String fromUserAvatar) {
+        this.fromUserAvatar = fromUserAvatar;
+    }
 
     public String getMessage() {
         return message;
@@ -17,35 +25,30 @@ public class SocketMessage {
         this.message = message;
     }
 
-    public String getDestination() {
-        return destination;
+
+    public String getFromUserName() {
+        return fromUserName;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setFromUserName(String fromUserName) {
+        this.fromUserName = fromUserName;
     }
 
-    public String getFromUser() {
-        return fromUser;
+    public String getToUserName() {
+        return toUserName;
     }
 
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
-    }
-
-    public String getToUser() {
-        return toUser;
-    }
-
-    public void setToUser(String toUser) {
-        this.toUser = toUser;
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
 
     @Override
     public String toString() {
         return "SocketMessage{" +
-                "data='" + message + '\'' +
-                ", destination='" + destination + '\'' +
+                "message='" + message + '\'' +
+                ", fromUserName='" + fromUserName + '\'' +
+                ", fromUserAvatar='" + fromUserAvatar + '\'' +
+                ", toUserName='" + toUserName + '\'' +
                 '}';
     }
 }
